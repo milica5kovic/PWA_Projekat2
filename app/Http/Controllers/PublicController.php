@@ -1,0 +1,71 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Kategorija;
+use App\Models\Proizvod;
+use Illuminate\Http\Request;
+
+class PublicController extends Controller
+{
+    public function pocetna()
+    {
+        $data["najnovije"] = Proizvod::latest()->limit(10)->get();
+
+        $kategorije = Kategorija::all();
+        $data["kategorije"] = $kategorije;
+        $data["proizvodi_kategorije"] = [];
+        $data["izdvajamo"] = Proizvod::where('oznaceno', 1)->limit(10)->get();
+
+        if ($data["izdvajamo"]->isNotEmpty()) {
+            $data["hero"] = $data["izdvajamo"]->random();
+        } else {
+            $data["hero"] = Proizvod::latest()->first();
+        }
+
+
+        foreach ($kategorije as $kategorija) {
+            $data["proizvodi_kategorije"][$kategorija->ime] = Proizvod::where('kategorija_id', $kategorija->id)->limit(10)->get();
+        }
+
+        return view('public.pocetna')->with($data);
+    }
+
+    public function kontakt()
+    {
+        return view('public.kontakt');
+    }
+
+    public function prijava()
+    {
+        return view('public.prijava');
+    }
+
+    public function registracija()
+    {
+        return view('public.registracija');
+    }
+
+    public function proizvodi($filter = null)
+    {
+
+        if ($filter) {
+            $data["proizvodi"] = Proizvod::where('kategorija_id', $filter)->get();
+        } else {
+            $data["proizvodi"] = Proizvod::all();
+        }
+
+        return view('public.proizvodi')->with($data);
+    }
+
+    public function proizvod($id = 1) {
+        $data["proizvod"] = Proizvod::find($id);
+        $data["slicniProizvodi"] = Proizvod::where('kategorija_id', $data["proizvod"]->kategorija_id)->limit(5)->get();
+        return view('public.proizvod')->with($data);
+    }
+
+    public function kategorije()
+    {
+        return view('public.kategorije')->with(["kategorije" => Kategorija::all()]);
+    }
+}
