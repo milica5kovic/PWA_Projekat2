@@ -49,8 +49,6 @@
             color: #fff;
         }
     </style>
-
-    {{-- Main Contact Section --}}
     <section class="contact-info-section">
         <div class="container">
 

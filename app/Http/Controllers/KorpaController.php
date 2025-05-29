@@ -10,7 +10,7 @@ use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 
-class ServisController extends Controller
+class KorpaController extends Controller
 {
     public function dodaj_u_korpu($id)
     {
@@ -74,6 +74,4 @@ class ServisController extends Controller
 
         return view('korisnik.forma_za_porudzbinu', ['sadrzaj' => $data["proizvodi"]]);
     }
-
-
 }

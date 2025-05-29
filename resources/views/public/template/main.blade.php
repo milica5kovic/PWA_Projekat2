@@ -30,19 +30,20 @@
                     <li><a href="{{ route("proizvodi") }}">Proizvodi</a></li>
                     <li><a href="{{ route("kontakt") }}">Kontakt</a></li>
                     @if(Auth::check())
-                    <li class="menu-has-children"><a href="{{ route("dashboard") }}">{{ Auth::user()->name }}</a>
-                        <ul>
-                            <li><a href="{{ route("korpa") }}">Korpa</a></li>
-                            <li><a href="{{ route("dashboard") }}">Profil</a></li>
-                            <li>
-                                <form method="POST" action="{{ route('logout') }}">
-                                    @csrf
-                                    <a href="{{ route('logout') }}"
-                                       onclick="event.preventDefault(); this.closest('form').submit();">Odjavite se</a>
-                                </form>
-                            </li>
-                        </ul>
-                    </li>
+                        <li class="menu-has-children"><a href="{{ route("dashboard") }}">{{ Auth::user()->name }}</a>
+                            <ul>
+                                <li><a href="{{ route("korpa") }}">Korpa</a></li>
+                                <li><a href="{{ route("dashboard") }}">Profil</a></li>
+                                <li>
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <a href="{{ route('logout') }}"
+                                           onclick="event.preventDefault(); this.closest('form').submit();">Odjavite
+                                            se</a>
+                                    </form>
+                                </li>
+                            </ul>
+                        </li>
                     @else
                         <li><a href="{{ route("login") }}">Prijava</a></li>
                         <li><a href="{{ route("register") }}">Registracija</a></li>
@@ -52,7 +53,83 @@
         </div>
     </div>
 </header>
-@yield("content")
+@if(Route::currentRouteName() == 'proizvodi' || Route::currentRouteName() == "kategorije" || Route::currentRouteName() == "proizvod")
+    @if(Auth::check())
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-3 col-lg-2">
+                    <div class="sticky-sidebar">
+                        <div class="korpa-content bg-light">
+                            <h3 class="mb-3">Moja korpa</h3>
+                            <ol class="list-unstyled">
+                                @foreach($korpa->predmetiKorpe as $item)
+                                    <li class="mb-2">
+                                        <p class="mb-0">
+                                            {{ $item->proizvod->ime }} <br>
+                                            <span class="text-primary">{{ $item->proizvod->cena }} rsd</span>
+                                        </p>
+                                    </li>
+                                @endforeach
+                            </ol>
+                            <a href="{{route('korpa')}}" class="btn btn-primary mt-3">Pregledaj korpu</a>
+                        </div>
+                    </div>
+                </div>
+                <main class="col-md-9 col-lg-10">
+                    @yield("content")
+                </main>
+            </div>
+        </div>
+
+        <style>
+            .sticky-sidebar {
+                position: relative;
+                top: 120px;
+                height: 100%;
+            }
+
+            .korpa-content {
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                margin: 15px;
+                height: 100%;
+            }
+
+            .sticky-sidebar::-webkit-scrollbar {
+                display: none;
+            }
+
+            .sticky-sidebar {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+
+            @media (max-width: 768px) {
+                .sticky-sidebar {
+                    position: fixed;
+                    top: auto;
+                    bottom: 0;
+                    left: 0;
+                    right: 0;
+                    height: auto;
+                    max-height: 50vh;
+                    z-index: 1000;
+                    background: white;
+                }
+
+                .korpa-content {
+                    margin: 0;
+                    border-radius: 10px 10px 0 0;
+                }
+            }
+        </style>
+    @else
+        @yield("content")
+    @endif
+@else
+    @yield("content")
+@endif
 <footer class="footer-area section-gap">
     <div class="container">
         <div class="row">
@@ -85,7 +162,6 @@
         </div>
     </div>
 </footer>
-<!-- End footer Area -->
 
 <script src="{{ asset('js/vendor/jquery-2.2.4.min.js') }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
@@ -107,6 +183,3 @@
 <script src="{{ asset('js/main.js') }}"></script>
 </body>
 </html>
-
-
-

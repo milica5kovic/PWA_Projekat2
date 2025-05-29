@@ -52,7 +52,6 @@
     </div>
 @endsection
 
-@push('scripts')
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
         google.charts.load('current', {'packages':['corechart', 'line']});
@@ -65,12 +64,12 @@
         }
 
         function drawPorudzbineChart() {
-            const porudzbineRawData = {!! $porudzbineData !!};
-            if (porudzbineRawData.length <= 1) { // Only header or no data
+            const raw = {!! $porudzbineData !!};
+            var data = google.visualization.arrayToDataTable(raw);
+            if (data.length <= 1) {
                 document.getElementById('porudzbine_chart_div').innerHTML = '<p class="text-center p-5">Nema dovoljno podataka o porudžbinama za prikaz grafikona.</p>';
                 return;
             }
-            var data = google.visualization.arrayToDataTable(porudzbineRawData);
             var options = {
                 title: 'Porudžbine Tokom Vremena',
                 curveType: 'function',
@@ -102,7 +101,8 @@
         }
 
         function drawKategorijeChart() {
-            const kategorijeRawData = {!! $kategorijeData !!};
+            const raw = {!! $kategorijeData !!};
+            const kategorijeRawData = raw.map((row, i) => i === 0 ? row : [new Date(row[0]), row[1]]);
             if (kategorijeRawData.length <= 1) {
                 document.getElementById('kategorije_chart_div').innerHTML = '<p class="text-center p-5">Nema dovoljno podataka o kategorijama za prikaz grafikona.</p>';
                 return;
@@ -113,7 +113,7 @@
                 legend: { position: 'bottom' },
                 hAxis: { title: 'Datum', format: 'dd.MM.yyyy', slantedText: true, slantedTextAngle: 45 },
                 vAxis: { title: 'Broj Kategorija', minValue: 0, viewWindow: { min:0 } },
-                colors: ['#36b9cc'] // Cyan
+                colors: ['#36b9cc']
             };
             var chart = new google.visualization.LineChart(document.getElementById('kategorije_chart_div'));
             chart.draw(data, options);
@@ -125,4 +125,4 @@
             resizeTimeout = setTimeout(drawAllCharts, 500);
         });
     </script>
-@endpush
+

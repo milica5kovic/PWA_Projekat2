@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Kategorija;
+use App\Models\Korpa;
 use App\Models\Proizvod;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PublicController extends Controller
 {
@@ -48,6 +50,8 @@ class PublicController extends Controller
 
     public function proizvodi($filter = null)
     {
+        if(Auth::check())
+            $data["korpa"] = Korpa::where(["korisnik_id" => Auth::user()->id])->first();
 
         if ($filter) {
             $data["proizvodi"] = Proizvod::where('kategorija_id', $filter)->get();
@@ -59,6 +63,8 @@ class PublicController extends Controller
     }
 
     public function proizvod($id = 1) {
+        if(Auth::check())
+            $data["korpa"] = Korpa::where(["korisnik_id" => Auth::user()->id])->first();
         $data["proizvod"] = Proizvod::find($id);
         $data["slicniProizvodi"] = Proizvod::where('kategorija_id', $data["proizvod"]->kategorija_id)->limit(5)->get();
         return view('public.proizvod')->with($data);
@@ -66,6 +72,9 @@ class PublicController extends Controller
 
     public function kategorije()
     {
-        return view('public.kategorije')->with(["kategorije" => Kategorija::all()]);
+        if(Auth::check())
+            $data["korpa"] = Korpa::where(["korisnik_id" => Auth::user()->id])->first();
+        $data["kategorije"] = Kategorija::all();
+        return view('public.kategorije')->with($data);
     }
 }

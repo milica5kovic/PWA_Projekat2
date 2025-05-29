@@ -19,7 +19,7 @@
                         <tr>
                             <th scope="row">{{ $porudzbina->id }}</th>
                             <td>
-                                @if($porudzbina->korpa && $porudzbina->korpa->korisnik)
+                                @if($porudzbina->korpa && $porudzbina->korpa)
                                     {{ $porudzbina->korpa->korisnik->name }} ({{ $porudzbina->korpa->korisnik->email }})
                                 @else
                                     N/A

@@ -111,12 +111,12 @@ class AdminController extends Controller
                     $data['slika'] = request()->file('slika')->store('proizvodi', 'public');
                 }
 
-                Proizvod::factory()->create($data);
+                Proizvod::create($data);
                 return Redirect::back();
 
             case 'kategorija':
                 $data = request()->except('_token');
-                Kategorija::factory()->create($data);
+                Kategorija::create($data);
                 return Redirect::back();
             case 'porudzbina':
                 break;
