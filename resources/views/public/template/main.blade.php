@@ -62,14 +62,16 @@
                         <div class="korpa-content bg-light">
                             <h3 class="mb-3">Moja korpa</h3>
                             <ol class="list-unstyled">
-                                @foreach($korpa->predmetiKorpe as $item)
-                                    <li class="mb-2">
-                                        <p class="mb-0">
-                                            {{ $item->proizvod->ime }} <br>
-                                            <span class="text-primary">{{ $item->proizvod->cena }} rsd</span>
-                                        </p>
-                                    </li>
-                                @endforeach
+                                @if(isset($korpa) && $korpa->predmetiKorpe->isNotEmpty())
+                                    @foreach($korpa->predmetiKorpe as $item)
+                                        <li class="mb-2">
+                                            <p class="mb-0">
+                                                {{ $item->proizvod->ime }} <br>
+                                                <span class="text-primary">{{ $item->proizvod->cena }} rsd</span>
+                                            </p>
+                                        </li>
+                                    @endforeach
+                                @endif
                             </ol>
                             <a href="{{route('korpa')}}" class="btn btn-primary mt-3">Pregledaj korpu</a>
                         </div>
@@ -91,7 +93,7 @@
             .korpa-content {
                 padding: 20px;
                 border-radius: 10px;
-                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
                 margin: 15px;
                 height: 100%;
             }

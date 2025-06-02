@@ -65,6 +65,7 @@ class PublicController extends Controller
     public function proizvod($id = 1) {
         if(Auth::check())
             $data["korpa"] = Korpa::where(["korisnik_id" => Auth::user()->id])->first();
+
         $data["proizvod"] = Proizvod::find($id);
         $data["slicniProizvodi"] = Proizvod::where('kategorija_id', $data["proizvod"]->kategorija_id)->limit(5)->get();
         return view('public.proizvod')->with($data);
